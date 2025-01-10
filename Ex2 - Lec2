@@ -1,0 +1,19 @@
+public class Example2 {
+
+    public static boolean isIncreasing(int[] array) {
+        for (int arr = 1; arr < array.length; arr++) {
+            if (array[arr] <= array[arr - 1]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        int[] array1 = {1, 3, 5, 10};
+        int[] array2 = {4, 10, 3, 20};
+
+        System.out.println("Array1 is increasing: " + isIncreasing(array1)); // Output: true
+        System.out.println("Array2 is increasing: " + isIncreasing(array2)); // Output: false
+    }
+}
