@@ -1,0 +1,53 @@
+package com.gradescope.cs201;
+import com.gradescope.cs201.UnsortedArrayBlackbox;
+import com.gradescope.cs201.SortedArrayBlackbox;
+import java.util.ArrayList;
+
+public class Sorting_and_searching_hw3 {
+    public Sorting_and_searching_hw3() {
+    }
+
+    public int get_median_index(UnsortedArrayBlackbox unsorted_arr_bb) {
+        int n = unsorted_arr_bb.get_length();
+        ArrayList<Integer> sortedList = new ArrayList<>();
+
+        for (int i = 0; i < n; i++) {
+            insertSorted(sortedList, i, unsorted_arr_bb);
+        }
+
+        return sortedList.get((n - 1) / 2);
+    }
+
+    private void insertSorted(ArrayList<Integer> sortedList, int index, UnsortedArrayBlackbox arr) {
+        int left = 0, right = sortedList.size();
+
+        while (left < right) {
+            int mid = left + (right - left) / 2;
+            if (arr.compare(index, sortedList.get(mid)) < 0) {
+                right = mid;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        sortedList.add(left, index);
+    }
+
+    public int get_index(SortedArrayBlackbox sorted_arr_bb, int x) {
+        int left = 0, right = sorted_arr_bb.get_length() - 1;
+
+        while (left <= right) {
+            int mid = left + (right - left) / 2;
+            int cmp = sorted_arr_bb.compare(mid, x);
+
+            if (cmp == 0) {
+                return mid;
+            } else if (cmp < 0) {
+                left = mid + 1;
+            } else {
+                right = mid - 1;
+            }
+        }
+        return -1;
+    }
+}
