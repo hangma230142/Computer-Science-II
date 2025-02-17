@@ -22,7 +22,7 @@ public class Sorting_and_searching_hw3 {
         int left = 0, right = sortedList.size();
 
         while (left < right) {
-            int mid = left + (right - left) / 2;
+            int mid = (left + right) / 2;
             if (arr.compare(index, sortedList.get(mid)) < 0) {
                 right = mid;
             } else {
@@ -37,7 +37,7 @@ public class Sorting_and_searching_hw3 {
         int left = 0, right = sorted_arr_bb.get_length() - 1;
 
         while (left <= right) {
-            int mid = left + (right - left) / 2;
+            int mid = (left + right) / 2;
             int cmp = sorted_arr_bb.compare(mid, x);
 
             if (cmp == 0) {
