@@ -1,0 +1,72 @@
+package com.gradescope.cs201;
+
+import java.util.*;
+
+public class Hw5 {
+    public boolean check_balanced_parenthesis_str(String s) {
+        Stack<Character> stack = new Stack<>();
+        for (char c : s.toCharArray()) {
+            if (c == '(') {
+                stack.push(c);
+            } else if (c == ')') {
+                if (stack.isEmpty()) return false;
+                stack.pop();
+            }
+        }
+        return stack.isEmpty();
+    }
+
+    public int estimate_visit_time(String[][] patient_procedures) {
+        Map<String, Integer> procedure_time = new HashMap<>();
+        procedure_time.put("PrimaryCare_1", 10);
+        procedure_time.put("PrimaryCare_2", 10);
+        procedure_time.put("X-ray", 4);
+        procedure_time.put("Lab test", 8);
+        procedure_time.put("Pharmacy", 7);
+        
+        Map<String, Integer> priority = new HashMap<>();
+        priority.put("PrimaryCare_1", 1);
+        priority.put("PrimaryCare_2", 2);
+        priority.put("X-ray", 3);
+        priority.put("Lab test", 4);
+        priority.put("Pharmacy", 5);
+        
+        int total_time = 0;
+        Map<String, Integer> last_usage_time = new HashMap<>();
+
+        for (String[] patient : patient_procedures) {
+            int patient_time = 0;
+            for (String procedure : patient) {
+                if (!procedure.isEmpty()) {
+                    int wait_time = Math.max(0, last_usage_time.getOrDefault(procedure, 0) - patient_time);
+                    patient_time += wait_time + procedure_time.get(procedure);
+                    last_usage_time.put(procedure, patient_time);
+                }
+            }
+            total_time = patient_time;
+        }
+        return total_time;
+    }
+
+    public String[] find_word_list(String sentence) {
+        // return new String[0];
+        Set<String> seen = new LinkedHashSet<String>(Arrays.asList(sentence.split(" ")));
+        return seen.toArray(new String[0]);
+    }
+
+    public static void main(String[] args) {
+        Hw5 tmp = new Hw5();
+        System.out.println(tmp.check_balanced_parenthesis_str("(()()(()))")); // true
+        System.out.println(tmp.check_balanced_parenthesis_str("()())(")); // false
+        System.out.println(tmp.check_balanced_parenthesis_str("()())")); // false
+
+        String[][] patients_1 = {
+            {"PrimaryCare_1", "X-ray", "PrimaryCare_1", "Pharmacy", "", ""},
+            {"PrimaryCare_2", "Pharmacy", "", "", "", ""}
+        };
+        System.out.println("Time " + tmp.estimate_visit_time(patients_1)); // 17
+
+        System.out.println(Arrays.toString(tmp.find_word_list("data structures are different from abstract data types")));
+        System.out.println(Arrays.toString(tmp.find_word_list("public methods of a class are methods that can be called by another class")));
+    }
+}
