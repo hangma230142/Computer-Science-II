@@ -1,0 +1,51 @@
+package com.gradescope.cs201;
+
+// Define the Node class
+class Node<T> {
+    T data;
+    Node<T> next;
+
+    public Node(T data, Node<T> next) {
+        this.data = data;
+        this.next = next;
+    }
+}
+
+// Define the interface
+interface Hw6_interface<T> {
+    public Node<T> reverse(Node<T> input_node);
+    public void delete_duplicate(Node<T> input_node);
+}
+
+// Implement the interface
+public class NodeOperation_hw6<T> implements Hw6_interface<T> {
+    
+    // Method to reverse a linked list
+    @Override
+    public Node<T> reverse(Node<T> input_node) {
+        Node<T> prev = null;
+        Node<T> current = input_node;
+        Node<T> next = null;
+        
+        while (current != null) {
+            next = current.next; // Save next node
+            current.next = prev; // Reverse the link
+            prev = current; // Move prev to current
+            current = next; // Move to next node
+        }
+        return prev; // New head of the reversed list
+    }
+    
+    // Method to delete duplicate elements from a sorted linked list
+    @Override
+    public void delete_duplicate(Node<T> input_node) {
+        Node<T> current = input_node;
+        while (current != null && current.next != null) {
+            if (current.data.equals(current.next.data)) {
+                current.next = current.next.next; // Skip duplicate node
+            } else {
+                current = current.next; // Move to next node
+            }
+        }
+    }
+}
