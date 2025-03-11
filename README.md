@@ -1,5 +1,4 @@
-# Computer-Science-II
-# CS2 - Data Structures & Algorithms  
+# Computer-Science-II -  Data Structures & Algorithms  
 
 ## Overview  
 This repository contains my **CS2 assignments and exercises** related to **Data Structures and Algorithms**,  
