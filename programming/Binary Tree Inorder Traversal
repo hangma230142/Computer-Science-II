@@ -1,0 +1,33 @@
+import java.util.*;
+class BinaryTreeNode<T> {
+    T data;
+    BinaryTreeNode<T> left, right;
+    public BinaryTreeNode(T data, BinaryTreeNode<T> left_, BinaryTreeNode<T> right_) {
+        this.data = data;
+        this.left = left_;
+        this.right = right_;
+    }
+    public BinaryTreeNode(T data) {
+        this(data, null, null);
+    }
+}
+class BinaryTree<T> {
+    protected BinaryTreeNode<T> root;
+    public BinaryTree() {
+        root = null;
+    }
+    public BinaryTree(BinaryTreeNode<T> root_) {
+        root = root_;
+    }
+    public List<T> inorderTraversal() {
+        List<T> result = new ArrayList<>();
+        inorderTraversalHelper(root, result);
+        return result;
+    }
+    public void inorderTraversalHelper(BinaryTreeNode<T> node, List<T> result) {
+        if (node == null) return;
+        inorderTraversalHelper(node.left, result);
+        result.add(node.data);
+        inorderTraversalHelper(node.right, result);
+    }
+}
