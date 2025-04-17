@@ -1,0 +1,173 @@
+class HashTableItem<V> {
+    String key;
+    V value;
+}
+
+abstract class HashTable_AbstractClass<V> {
+    public final static int BUCKET_ARRAY_SIZE = 10;
+    public HashTableItem<V>[] bucket_array;
+
+    public abstract int hashfunction (String key);
+    public abstract boolean insert (String key, V value);
+    public abstract V search (String key);
+    public abstract void delete (String key);
+
+    public int size() {
+        int count = 0;
+        for (HashTableItem<V> item : bucket_array) {
+            if (item != null && item.key != null) {
+                count++;
+            }
+        }
+        return count;
+    }
+}
+
+public class Hashtable_hw8<V> extends HashTable_AbstractClass<V> {
+
+    public Hashtable_hw8() {
+        bucket_array = new HashTableItem[BUCKET_ARRAY_SIZE];
+    }
+
+    @Override
+    public int hashfunction(String key) {
+        int p = 31;
+        int m = BUCKET_ARRAY_SIZE;
+        long hash = 0;
+        long power = 1;
+        for (char c : key.toCharArray()) {
+            hash = (hash + (c - 'a' + 1) * power) % m;
+            power = (power * p) % m;
+        }
+        return (int) hash;
+    }
+
+    @Override
+    public boolean insert(String key, V value) {
+        int index = hashfunction(key);
+        for (int i = 0; i < BUCKET_ARRAY_SIZE; i++) {
+            int probeIndex = (index + i) % BUCKET_ARRAY_SIZE;
+            if (bucket_array[probeIndex] == null || bucket_array[probeIndex].key == null) {
+                HashTableItem<V> newItem = new HashTableItem<>();
+                newItem.key = key;
+                newItem.value = value;
+                bucket_array[probeIndex] = newItem;
+                return true;
+            }
+            if (bucket_array[probeIndex].key.equals(key)) {
+                bucket_array[probeIndex].value = value;
+                return true;
+            }
+        }
+        return false;
+    }
+
+    @Override
+    public V search(String key) {
+        int index = hashfunction(key);
+        for (int i = 0; i < BUCKET_ARRAY_SIZE; i++) {
+            int probeIndex = (index + i) % BUCKET_ARRAY_SIZE;
+            HashTableItem<V> item = bucket_array[probeIndex];
+            if (item == null) return null;
+            if (item.key != null && item.key.equals(key)) return item.value;
+        }
+        return null;
+    }
+
+    @Override
+    public void delete(String key) {
+        int index = hashfunction(key);
+        for (int i = 0; i < BUCKET_ARRAY_SIZE; i++) {
+            int probeIndex = (index + i) % BUCKET_ARRAY_SIZE;
+            HashTableItem<V> item = bucket_array[probeIndex];
+            if (item == null) return;
+            if (item.key != null && item.key.equals(key)) {
+                item.key = null;
+                item.value = null;
+                return;
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        // Sample test 1: Test if the size of your bucket array is correct
+        Hashtable_hw8<String> ht_1 = new Hashtable_hw8<>();
+        System.out.println("1: " + ((ht_1.bucket_array.length == HashTable_AbstractClass.BUCKET_ARRAY_SIZE) ? "true" : "false"));
+
+        // Sample test 2: Test if your hash function can produce a uniform distribution
+        String[] keys = {"fulbright", "university", "vietnam", "crescent", "plaza", "computer", "science", "major", "data", "structure", "hash", "table", "exam", "programming", "test"};
+        int[] frequence = new int[HashTable_AbstractClass.BUCKET_ARRAY_SIZE];
+        int max_freq = 0;
+        Hashtable_hw8<Integer> ht_2 = new Hashtable_hw8<>();
+        for (String key : keys) {
+            int index = ht_2.hashfunction(key);
+            frequence[index]++;
+            if (frequence[index] > max_freq)
+                max_freq = frequence[index];
+        }
+        System.out.println("2: " + ((max_freq < 5) ? "true" : "false"));
+
+        // Sample test 3: Test insertion
+        Hashtable_hw8<Integer> ht_3 = new Hashtable_hw8<>();
+        ht_3.insert("a", 1);
+        ht_3.insert("bc", 2);
+        ht_3.insert("defg", 3);
+        ht_3.insert("hijkl", 4);
+        ht_3.insert("mnopq", 5);
+        ht_3.insert("rstvu", 6);
+        System.out.println("3: " + ((ht_3.search("hijkl") == 4) ? "true" : "false"));
+        System.out.println("4: " + ((ht_3.size() == 6) ? "true" : "false"));
+
+        // Sample test 4: Test insertion of old keys
+        Hashtable_hw8<String> ht_4 = new Hashtable_hw8<>();
+        ht_4.insert("fulbright", "one");
+        ht_4.insert("university", "two");
+        ht_4.insert("vietnam", "three");
+        ht_4.insert("computer", "four");
+        ht_4.insert("science", "five");
+        ht_4.insert("vietnam", "six");
+        ht_4.insert("university", "seven");
+        System.out.println("5: " + ((ht_4.size() == 5) ? "true" : "false"));
+        String tmp = ht_4.search("vietnam");
+        System.out.println("6: " + ((tmp.equals("six")) ? "true" : "false"));
+        tmp = ht_4.search("university");
+        System.out.println("7: " + ((tmp.equals("seven")) ? "true" : "false"));
+
+        // Sample test 5: Test insertion until the bucket array is full
+        Hashtable_hw8<Integer> ht_5 = new Hashtable_hw8<>();
+        ht_5.insert("a", 1);
+        ht_5.insert("b", 2);
+        ht_5.insert("c", 3);
+        ht_5.insert("d", 4);
+        ht_5.insert("e", 5);
+        ht_5.insert("f", 6);
+        ht_5.insert("g", 7);
+        ht_5.insert("h", 8);
+        ht_5.insert("i", 9);
+        System.out.println("8: " + ((ht_5.insert("j", 10) == true) ? "true" : "false"));
+        System.out.println("9: " + ((ht_5.insert("k", 11) == false) ? "true" : "false"));
+        System.out.println("10: " + ((ht_5.insert("l", 12) == false) ? "true" : "false"));
+        System.out.println("11: " + ((ht_5.size() == HashTable_AbstractClass.BUCKET_ARRAY_SIZE) ? "true" : "false"));
+
+        // Sample test 6: Test deletion
+        Hashtable_hw8<String> ht_6 = new Hashtable_hw8<>();
+        ht_6.insert("fulbright", "one");
+        ht_6.insert("university", "two");
+        ht_6.insert("vietnam", "three");
+        ht_6.insert("computer", "four");
+        ht_6.insert("science", "five");
+        ht_6.insert("data", "six");
+        ht_6.insert("science", "seven");
+        ht_6.delete("data");
+        ht_6.delete("data");
+        ht_6.insert("artificial", "6");
+        ht_6.insert("intelligence", "7");
+        ht_6.insert("general", "8");
+        ht_6.delete("science");
+        ht_6.insert("data", "8");
+        System.out.println("12: " + ((ht_6.size() == 8) ? "true" : "false"));
+        System.out.println("13: " + ((ht_6.search("vietnam").equals("three")) ? "true" : "false"));
+        System.out.println("14: " + ((ht_6.search("science") == null) ? "true" : "false"));
+        System.out.println("15: " + ((ht_6.search("data").equals("8")) ? "true" : "false"));
+    }
+}
