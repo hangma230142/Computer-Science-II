@@ -1,0 +1,145 @@
+import java.util.*;
+
+public class BinaryTreeOperation_hw7<T> implements Hw7_interface<T> {
+
+    @Override
+    public BinaryTree<T> build_tree(String s) {
+        if (s == null || s.isEmpty()) return null;
+
+        Deque<BinaryTree<T>> nodestack = new ArrayDeque<>();
+        Deque<String> datastack = new ArrayDeque<>();
+        String bffr = "";
+
+        BinaryTree<T> root = new BinaryTree<>(null, null, null);
+        nodestack.push(root);
+
+        for (int i = 1; i < s.length(); i++) {
+            if (s.charAt(i) == '(') {
+                BinaryTree<T> newnode = new BinaryTree<>(null, null, null);
+                if (s.charAt(i - 1) == ')') {
+                    nodestack.peek().right = newnode;
+                } else {
+                    nodestack.peek().left = newnode;
+                    datastack.push(bffr);
+                    bffr = "";
+                }
+                nodestack.push(newnode);
+            } else if (s.charAt(i) == ')') {
+                if (s.charAt(i - 1) != '(') {
+                    if (s.charAt(i - 1) != ')') {
+                        datastack.push(bffr);
+                        bffr = "";
+                    }
+                    nodestack.peek().data = this.fromString(datastack.pop());
+                }
+                nodestack.pop();
+            } else {
+                bffr += s.charAt(i);
+            }
+        }
+
+        return root;
+    }
+
+    private T fromString(String str) {
+        return (T) Integer.valueOf(str);
+    }
+
+    @Override
+    public String print_tree_in_vertical_format(BinaryTree<T> input_tree) {
+        StringBuilder sb = new StringBuilder();
+        printVertical(input_tree, sb, "", true);
+        return sb.toString();
+    }
+
+    private void printVertical(BinaryTree<T> node, StringBuilder sb, String prefix, boolean isTail) {
+        if (node == null) return;
+
+        sb.append(prefix);
+        if (!prefix.isEmpty()) {
+            sb.append("|_");
+        }
+        sb.append(node.data).append("\n");
+
+        List<BinaryTree<T>> children = new ArrayList<>();
+        if (node.left != null) children.add(node.left);
+        if (node.right != null) children.add(node.right);
+
+        for (int i = 0; i < children.size(); i++) {
+            boolean last = (i == children.size() - 1);
+            String newPrefix = prefix + (isTail ? "|   " : "|   ");
+            printVertical(children.get(i), sb, newPrefix, last);
+        }
+    }
+
+    @Override
+    public String print_tree_in_horizontal_format(BinaryTree<T> input_tree) {
+        if (input_tree == null) return "";
+        StringBuilder sb = new StringBuilder();
+        Queue<BinaryTree<T>> queue = new LinkedList<>();
+        queue.add(input_tree);
+
+        while (!queue.isEmpty()) {
+            int size = queue.size();
+            for (int i = 0; i < size; i++) {
+                BinaryTree<T> node = queue.poll();
+                sb.append(node.data).append(" ");
+                if (node.left != null) queue.add(node.left);
+                if (node.right != null) queue.add(node.right);
+            }
+            sb.append("\n");
+        }
+
+        return sb.toString().trim();
+    }
+
+    public static void main(String[] args) {
+        BinaryTreeOperation_hw7<Integer> bto_hw7_int = new BinaryTreeOperation_hw7<>();
+
+        // Test case 1
+        BinaryTree<Integer> tree_1 = bto_hw7_int.build_tree("(1(2()(3(4)(5)))(6))");
+        System.out.println(tree_1.print_to_string());
+        System.out.println(bto_hw7_int.print_tree_in_vertical_format(tree_1));
+        System.out.println(bto_hw7_int.print_tree_in_horizontal_format(tree_1));
+
+        // Test case 2
+        BinaryTree<Integer> tree_2 = bto_hw7_int.build_tree("(1(2()(3))(4(5)()))");
+        System.out.println(tree_2.print_to_string());
+        System.out.println(bto_hw7_int.print_tree_in_vertical_format(tree_2));
+        System.out.println(bto_hw7_int.print_tree_in_horizontal_format(tree_2));
+
+        // Test case 3
+        BinaryTree<Integer> tree_3 = bto_hw7_int.build_tree("(1(2(3(4)())(5))(6(7(8)())(9(10)(11))))");
+        System.out.println(tree_3.print_to_string());
+        System.out.println(bto_hw7_int.print_tree_in_vertical_format(tree_3));
+        System.out.println(bto_hw7_int.print_tree_in_horizontal_format(tree_3));
+    }
+}
+
+class BinaryTree<T> {
+    T data;
+    BinaryTree<T> left, right;
+
+    public BinaryTree(T data, BinaryTree<T> left, BinaryTree<T> right) {
+        this.data = data;
+        this.left = left;
+        this.right = right;
+    }
+
+    public String print_to_string() {
+        String leftStr = (left != null) ? left.print_to_string() : "";
+        String rightStr = (right != null) ? right.print_to_string() : "";
+
+        if (leftStr.isEmpty() && rightStr.isEmpty()) {
+            return "(" + data + ")";
+        }
+
+        return "(" + data + (leftStr.isEmpty() ? "" : leftStr) + (rightStr.isEmpty() ? "" : rightStr) + ")";
+    }
+}
+
+interface Hw7_interface<T> {
+    BinaryTree<T> build_tree(String input_str);
+    String print_tree_in_vertical_format(BinaryTree<T> input_tree);
+    String print_tree_in_horizontal_format(BinaryTree<T> input_tree);
+}
