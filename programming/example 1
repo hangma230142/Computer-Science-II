@@ -1,4 +1,5 @@
-class TreeNode {
+public class cs2_test_2 {
+    static class TreeNode {
         public int data;
         public TreeNode left, right;
         public TreeNode(int data_, TreeNode left_, TreeNode right_) {
@@ -7,7 +8,7 @@ class TreeNode {
             this.right = right_;
         }
     }
-    //question 1
+    //question 1: delete node wwith sum
     public static TreeNode delete_nodes_with_sum(TreeNode root, int targetSum) {
         if (root == null) return null;
 
@@ -23,7 +24,7 @@ class TreeNode {
         if (node == null) return 0;
         return node.data + subtreeSum(node.left) + subtreeSum(node.right);
     }
-    //question 2
+    //question 2 return true if the bst is height balanced
     public static boolean is_balanced_bst(TreeNode root) {
         return checkBalance(root) != -1;
     }
@@ -40,6 +41,10 @@ class TreeNode {
         TreeNode root = new TreeNode(10, new TreeNode(5, null, null), new TreeNode(15, null, null));
         root = delete_nodes_with_sum(root, 20);
         System.out.println(root.data); //10
+        System.out.println(is_balanced_bst(root)); //true
+    }
+}
+
         System.out.println(is_balanced_bst(root)); //true
     }
 }
