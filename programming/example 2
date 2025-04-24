@@ -1,0 +1,34 @@
+public class cs2_test_2 {
+    static class TreeNode{
+        public int data;
+        public TreeNode left, right;
+        public TreeNode(int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right;
+        }
+    }
+    // question 1 flattens the tree into a linked list using the right pointer to represent the next node in the list (preorder traversal)
+    public static TreeNode flatten_to_linked_list(TreeNode root) {
+        if (root == null) return null;
+        if (root.left != null) {
+            TreeNode temp = root.left;
+            temp.right = root.right;
+            root.right = root.left;
+            root.left = null;
+        }
+        flatten_to_linked_list(root.right);
+        return root;
+    }
+    // return true if the subtree rooted at subtreeRoot is a subtree rooted at root, otherwise false
+    public static boolean is_subtree(TreeNode root, TreeNode subtreeRoot) {
+        if (root == null) return false;
+        if (isIdentical(root, subtreeRoot)) return true;
+        return is_subtree(root.left, subtreeRoot) || is_subtree(root.right, subtreeRoot);
+    } 
+    private static boolean isIdentical(TreeNode a, TreeNode b) {
+        if (a == null && b == null) return true;
+        if ( a == null || b == null) return false;
+        return a.data == b.data && isIdentical(a.left, b.left) && isIdentical(a.right, b.right);
+    }
+}
