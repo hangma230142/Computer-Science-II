@@ -1,0 +1,30 @@
+public class cs2_test_2 {
+    static class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode (int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+    }
+    public static TreeNode delete_leaf_nodes(TreeNode root) {
+        if (root == null) {
+            return null;
+        }
+        root.left = delete_leaf_nodes(root.left);
+        root.right = delete_leaf_nodes(root.right);
+        if (root.left == null && root.right == null) {
+            return null;
+        }
+        return root;
+    }
+    public static void printTree(TreeNode root) {
+        if (root == null) {
+            return;
+        }
+        System.out.print(root.data + " ");
+        printTree(root.left);
+        printTree(root.right);
+    }
+}
