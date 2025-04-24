@@ -1,0 +1,31 @@
+public class cs2_test_2 {
+    static class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode (int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+    }
+    public static TreeNode delete_node_bts(TreeNode root, int key) {
+        if (root == null) return null;
+        if (key < root.data) {
+            root.left = delete_node_bts(root.left, key);
+        } else if (key > root.data) {
+            root.right = delete_node_bts(root.right, key);
+        } else {
+            if (root.left == null) return root.right;
+            else if (root.right == null) return root.left;
+            // two child node: find smallest left node
+            TreeNode minNode = findMin(root.right);
+            root.data = minNode.data;
+            root.right = delete_node_bts(root.right, minNode.data);
+        }
+        return root;
+    }
+    private static TreeNode findMin(TreeNode node) {
+        while (node.left != null) node = node.left;
+        return node;
+    }
+}
