@@ -1,0 +1,45 @@
+class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode(int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+    }
+    //question 1
+    public static TreeNode delete_nodes_with_sum(TreeNode root, int targetSum) {
+        if (root == null) return null;
+
+        root.left = delete_nodes_with_sum(root.left, targetSum);
+        root.right = delete_nodes_with_sum(root.right, targetSum);
+        int subtreeSum = subtreeSum(root);
+        if (subtreeSum == targetSum) {
+            return null;
+        }
+        return root;
+    }
+    private static int subtreeSum(TreeNode node){
+        if (node == null) return 0;
+        return node.data + subtreeSum(node.left) + subtreeSum(node.right);
+    }
+    //question 2
+    public static boolean is_balanced_bst(TreeNode root) {
+        return checkBalance(root) != -1;
+    }
+    private static int checkBalance(TreeNode node) {
+        if (node == null) return 0;
+        int leftHeight = checkBalance(node.left);
+        if (leftHeight == -1) return -1;
+        int rightHeight = checkBalance(node.right);
+        if (rightHeight == -1) return -1;
+        if (Math.abs(leftHeight - rightHeight) > 1) return -1;
+        return Math.max(leftHeight, rightHeight) + 1;
+    }
+    public static void main(String[] args) {
+        TreeNode root = new TreeNode(10, new TreeNode(5, null, null), new TreeNode(15, null, null));
+        root = delete_nodes_with_sum(root, 20);
+        System.out.println(root.data); //10
+        System.out.println(is_balanced_bst(root)); //true
+    }
+}
