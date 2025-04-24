@@ -1,0 +1,27 @@
+public class cs2_test_2 {
+    static class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode (int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+    }
+    // return true if the tree has a root-to-leaf path where the sum of the node values equals sum
+    public static boolean has_path_sum(TreeNode root, int sum) {
+        if (root == null) return false;
+        if (root.left == null && root.right == null) return root.data == sum;
+        return has_path_sum(root.left, sum - root.data) || has_path_sum(root.right, sum = root.data);
+    }
+    // return the depth (or level) of the node containing the target vlaue. Ig the target doesn't exist, return -1
+    public static int find_depth_of_node(TreeNode root, int target) {
+        return finDepth(root, target, 0);
+    }
+    private static int findDepth(TreeNode node, int target, int depth) {
+        if (node == null) return -1;
+        if (node.data == target) return depth;
+        int left = findDepth(node.left, target, depth + 1);
+        return (left != -1) ? left : findDepth(node.right, target, depth + 1);
+    }
+}
