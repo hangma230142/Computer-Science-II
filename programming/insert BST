@@ -1,0 +1,40 @@
+public class cs2_test_2 {
+    static class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode (int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+        public TreeNode(int data_) {
+            this(data_, null, null);
+        }
+    }
+    public static TreeNode insert_into_bst(TreeNode root, int value) {
+        if (root == null) {
+            return new TreeNode(value); 
+        }
+        if (value < root.data) {
+            root.left = insert_into_bst(root.left, value);
+        } else if (value > root.data) {
+            root.right = insert_into_bst(root.right, value);
+        }
+        return root;
+    }
+    public static void inorder(TreeNode root) {
+        if (root == null) return;
+        inorder(root.left);
+        System.out.print(root.data + " ");
+        inorder(root.right);
+    }
+    public static void main(String[] args) {
+        TreeNode root = null;
+        root = insert_into_bst(root, 5);
+        root = insert_into_bst(root, 3);
+        root = insert_into_bst(root, 8);
+        root = insert_into_bst(root, 4);
+        System.err.println("Inorder traversal: ");
+        inorder(root);
+    }
+}
