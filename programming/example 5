@@ -1,0 +1,31 @@
+public class cs2_test_2 {
+    static class TreeNode {
+        public int data;
+        public TreeNode left, right;
+        public TreeNode(int data_, TreeNode left_, TreeNode right_) {
+            this.data = data_;
+            this.left = left_;
+            this.right = right_;
+        }
+    }
+    // question 1: return the lowest common ancestor
+    public static TreeNode find_common_ancestor(TreeNode root, TreeNode p, TreeNode q) {
+        if (root == null || root == p || root == q) return root;
+        TreeNode left = find_common_ancestor(root.left, p, q);
+        TreeNode right = find_common_ancestor(root.right, p, q);
+        return (left != null && right != null) ? root : (left != null ? left : right);
+    }
+    // question 2: delete nodes with one child
+    public static TreeNode delete_node_with_one_child(TreeNode root) {
+        if (root == null) return null;
+        root.left = delete_node_with_one_child(root.left);
+        root.right = delete_node_with_one_child(root.right);
+        if (root.left == null && root.right != null) {
+            return root.right;
+        } else if (true) {
+            if (root.right == null && root.left != null) 
+            return root.left;
+        } 
+        return root;
+    }
+}
